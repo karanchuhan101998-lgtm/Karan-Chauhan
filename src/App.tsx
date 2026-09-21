@@ -9,6 +9,7 @@ import { GeminiLiveModal } from './components/GeminiLiveModal';
 import { AuthScreen } from './components/AuthScreen';
 import { PwaInstallModal } from './components/PwaInstallModal';
 import { PromptOptions } from './components/PromptComposer';
+import { exportChatToPdf } from './utils/pdfExport';
 import {
   Conversation,
   Message,
@@ -820,6 +821,16 @@ export const App: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  // Export chat as formatted PDF document
+  const handleExportPdf = (id?: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const conv = id
+      ? conversations.find((c) => c.id === id)
+      : activeConversation;
+    if (!conv) return;
+    exportChatToPdf(conv);
+  };
+
   // Export all data as JSON
   const handleExportAllData = () => {
     const data = {
@@ -934,6 +945,7 @@ export const App: React.FC = () => {
         onDeleteConversation={handleDeleteConversation}
         onTogglePin={handleTogglePin}
         onExportConversation={handleExportConversation}
+        onExportConversationPdf={handleExportPdf}
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         projects={projects}
@@ -967,6 +979,8 @@ export const App: React.FC = () => {
           currentUser={currentUser}
           onSignOut={handleSignOut}
           onOpenInstall={() => setIsInstallModalOpen(true)}
+          onExportPdf={() => handleExportPdf()}
+          hasMessages={Boolean(activeConversation && activeConversation.messages.length > 0)}
         />
 
         {/* Single-Page Chat Interface (Zero Code Image Generation & Editing) */}
@@ -993,6 +1007,7 @@ export const App: React.FC = () => {
             project={activeProject}
             onOpenLive={() => setIsLiveOpen(true)}
             userName={currentUser.name.split(' ')[0]}
+            onExportPdf={() => handleExportPdf()}
           />
         </main>
       </div>

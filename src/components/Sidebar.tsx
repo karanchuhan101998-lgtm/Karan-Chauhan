@@ -11,6 +11,7 @@ import {
   Pin,
   Trash2,
   Download,
+  FileDown,
   X,
   Radio,
   Sparkles,
@@ -29,6 +30,7 @@ interface SidebarProps {
   onDeleteConversation: (id: string, e: React.MouseEvent) => void;
   onTogglePin: (id: string, e: React.MouseEvent) => void;
   onExportConversation: (id: string, e: React.MouseEvent) => void;
+  onExportConversationPdf?: (id: string, e: React.MouseEvent) => void;
   activeTab?: ActiveTab;
   onSelectTab?: (tab: ActiveTab) => void;
   projects: Project[];
@@ -53,6 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onDeleteConversation,
   onTogglePin,
   onExportConversation,
+  onExportConversationPdf,
   activeTab,
   onSelectTab,
   projects,
@@ -199,6 +202,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onDelete={(e) => onDeleteConversation(c.id, e)}
                     onTogglePin={(e) => onTogglePin(c.id, e)}
                     onExport={(e) => onExportConversation(c.id, e)}
+                    onExportPdf={(e) => onExportConversationPdf?.(c.id, e)}
                   />
                 ))}
               </div>
@@ -237,6 +241,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onDelete={(e) => onDeleteConversation(c.id, e)}
                     onTogglePin={(e) => onTogglePin(c.id, e)}
                     onExport={(e) => onExportConversation(c.id, e)}
+                    onExportPdf={(e) => onExportConversationPdf?.(c.id, e)}
                   />
                 ))}
               </div>
@@ -321,6 +326,7 @@ interface ConversationItemProps {
   onDelete: (e: React.MouseEvent) => void;
   onTogglePin: (e: React.MouseEvent) => void;
   onExport: (e: React.MouseEvent) => void;
+  onExportPdf?: (e: React.MouseEvent) => void;
 }
 
 const ConversationItem: React.FC<ConversationItemProps> = ({
@@ -330,6 +336,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   onDelete,
   onTogglePin,
   onExport,
+  onExportPdf,
 }) => {
   return (
     <div
@@ -360,6 +367,16 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         >
           <Pin className="w-3 h-3" />
         </button>
+
+        {onExportPdf && (
+          <button
+            onClick={onExportPdf}
+            className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-white/[0.1]"
+            title="Export chat as PDF document"
+          >
+            <FileDown className="w-3 h-3" />
+          </button>
+        )}
 
         <button
           onClick={onExport}

@@ -22,6 +22,7 @@ import {
   Paintbrush,
   X,
   Image as ImageIcon,
+  FileDown,
 } from 'lucide-react';
 import { Message, Attachment, Conversation, Project } from '../types';
 import { GeminiLogo } from './GeminiLogo';
@@ -49,6 +50,7 @@ interface ChatViewProps {
   project?: Project;
   onOpenLive?: () => void;
   userName?: string;
+  onExportPdf?: () => void;
 }
 
 export const ChatView: React.FC<ChatViewProps> = ({
@@ -64,6 +66,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   project,
   onOpenLive,
   userName,
+  onExportPdf,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
@@ -195,6 +198,35 @@ export const ChatView: React.FC<ChatViewProps> = ({
         id="chat-messages-container"
         className="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6 max-w-4xl mx-auto w-full flex flex-col"
       >
+        {conversation.messages.length > 0 && (
+          <div
+            id="chat-header-actions"
+            className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-1 animate-in fade-in duration-200"
+          >
+            <div className="flex items-center gap-2 min-w-0 pr-2">
+              <span className="text-xs font-semibold text-slate-300 truncate">
+                {conversation.title || 'Conversation'}
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-400 shrink-0">
+                {conversation.messages.length} {conversation.messages.length === 1 ? 'message' : 'messages'}
+              </span>
+            </div>
+
+            {onExportPdf && (
+              <button
+                id="btn-chat-export-pdf"
+                type="button"
+                onClick={onExportPdf}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 hover:text-white border border-white/[0.1] hover:border-[#8B5CF6]/50 transition-all text-xs font-medium shadow-sm group active:scale-95 shrink-0"
+                title="Export this conversation as a formatted PDF document"
+              >
+                <FileDown className="w-3.5 h-3.5 text-rose-400 group-hover:scale-110 transition-transform" />
+                <span>Export PDF</span>
+              </button>
+            )}
+          </div>
+        )}
+
         {conversation.messages.length === 0 ? (
           /* Empty Chat Welcome Screen / Home Screen (ChatGPT & Gemini Style) */
           <div

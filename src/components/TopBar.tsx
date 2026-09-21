@@ -16,6 +16,7 @@ import {
   Download,
   LogOut,
   User as UserIcon,
+  FileDown,
 } from 'lucide-react';
 import { GeminiLogo } from './GeminiLogo';
 import { Project, AppCapabilities, AuthUser } from '../types';
@@ -35,6 +36,8 @@ interface TopBarProps {
   currentUser?: AuthUser;
   onSignOut?: () => void;
   onOpenInstall?: () => void;
+  onExportPdf?: () => void;
+  hasMessages?: boolean;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -52,6 +55,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   currentUser,
   onSignOut,
   onOpenInstall,
+  onExportPdf,
+  hasMessages = false,
 }) => {
   const [showCapsModal, setShowCapsModal] = React.useState(false);
   const [showModelDropdown, setShowModelDropdown] = useState(false);
@@ -301,6 +306,29 @@ export const TopBar: React.FC<TopBarProps> = ({
             }`}
           />
         </button>
+
+        {/* Export Chat PDF Button */}
+        {onExportPdf && (
+          <button
+            id="btn-topbar-export-pdf"
+            type="button"
+            onClick={onExportPdf}
+            disabled={!hasMessages}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+              hasMessages
+                ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30 hover:bg-rose-500/25 hover:text-white shadow-[0_0_12px_rgba(244,63,94,0.15)] active:scale-95 cursor-pointer'
+                : 'bg-white/[0.03] text-slate-500 border border-white/[0.05] cursor-not-allowed opacity-50'
+            }`}
+            title={
+              hasMessages
+                ? 'Export current chat history as formatted PDF document'
+                : 'Send a message first to export as PDF'
+            }
+          >
+            <FileDown className="w-3.5 h-3.5 text-rose-400" />
+            <span className="hidden md:inline">Export PDF</span>
+          </button>
+        )}
 
         {/* Workspaces / Projects button */}
         <button

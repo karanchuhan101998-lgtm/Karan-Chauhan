@@ -1,0 +1,6 @@
+{
+  "name": "Aura AI",
+  "description": "An intelligent, creative, and multimodal AI workspace.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
